@@ -65,7 +65,7 @@ column_show = ['AAVE',
 
 
 
-st.title('DAI Collaterization')
+st.title('DAI Collateralization')
 
 # create df
 df = get_vaults_list()
