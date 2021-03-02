@@ -90,8 +90,8 @@ fig = px.sunburst(df_ilk_curr,
 st.plotly_chart(fig)
 
 
-st.header('Vault level data')
-st.dataframe(df.style.highlight_max(axis=0))
+#st.header('Vault level data')
+#st.dataframe(df.style.highlight_max(axis=0))
 
 st.header('Aggregated data')
 st.dataframe(df_ilk_curr.style.highlight_max(axis=0))
