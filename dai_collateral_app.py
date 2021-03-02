@@ -64,20 +64,20 @@ column_show = ['AAVE',
               ]
 
 
-# create df and display it
+
+st.title('DAI Collaterization')
+
+# create df
 df = get_vaults_list()
-st.dataframe(df.style.highlight_max(axis=0))
 
-# create mapping and display it
+# create mapping
 df_ilk_curr = create_mapping()
-st.dataframe(df_ilk_curr.style.highlight_max(axis=0))
-
 
 # create sunburst chart
 fig = px.sunburst(df_ilk_curr,
                   path = ['currency L1', 'ilk',], 
                   values = 'percent', 
-                  title = 'DAI Collaterization',
+                  #title = 'DAI Collaterization',
                   #color ='wa_collateralization',
                   #color_continuous_scale = 'RdBu',
                   hover_data = {'wa_collateralization': ':,.2f',
@@ -88,3 +88,10 @@ fig = px.sunburst(df_ilk_curr,
                   #color_continuous_midpoint=np.average(df_ilk_curr['liquidation_ratio'], weights=df_ilk_curr['principal'])
                  )
 st.plotly_chart(fig)
+
+
+st.header('Vault level data')
+st.dataframe(df.style.highlight_max(axis=0))
+
+st.header('Aggregated data')
+st.dataframe(df_ilk_curr.style.highlight_max(axis=0))
