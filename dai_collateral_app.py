@@ -13,10 +13,15 @@ def get_vaults_list():
     bearer_token = 'Cf9pZZzc?JAYQ>A'
     payload = {}
     headers = {'Authorization': 'Bearer '+ bearer_token}
-    response = requests.request("GET", url, headers=headers, data = payload)
-    raw_data = json.dumps(response.json()["message"]['vaults'])
-    json_data = json.loads(raw_data)
-    df = pd.DataFrame.from_dict(json_data)
+    #response = requests.request("GET", url, headers=headers, data = payload)
+    #raw_data = json.dumps(response.json()["message"]['vaults'])
+    #json_data = json.loads(raw_data)
+    #df = pd.DataFrame.from_dict(json_data)
+
+    response = pd.read_json('response_2.json')
+    message = response['message'][0]
+    df = pd.DataFrame(data=message)
+
     df['liquidation_ratio'] = df['osm_price'] / df['principal'] * 100
     df['principal_x_collateralization'] = df['principal'] * df['collateralization']
     
@@ -67,11 +72,11 @@ column_show = ['AAVE',
 
 # create df and display it
 df = get_vaults_list()
-st.dataframe(df.style.highlight_max(axis=0))
+#st.dataframe(df.style.highlight_max(axis=0))
 
 # create mapping and display it
 df_ilk_curr = create_mapping()
-st.dataframe(df_ilk_curr.style.highlight_max(axis=0))
+#st.dataframe(df_ilk_curr.style.highlight_max(axis=0))
 
 
 # create sunburst chart
@@ -79,13 +84,15 @@ fig = px.sunburst(df_ilk_curr,
                   path = ['currency L1', 'ilk',], 
                   values = 'percent', 
                   title = 'DAI Collaterization',
-                  color ='wa_collateralization',
-                  hover_name = 'collateralization',
-                  color_continuous_scale = 'RdBu',
+                  #color ='wa_collateralization',
+                  #color_continuous_scale = 'RdBu',
+                  hover_data = {'wa_collateralization': ':,.2f',
+                                'percent' : ':,.2f',
+                               },
+                  #range_color = [0,300]
                   #color_continuous_midpoint= 200,
                   #color_continuous_midpoint=np.average(df_ilk_curr['liquidation_ratio'], weights=df_ilk_curr['principal'])
                  )
-#fig.show()
 st.plotly_chart(fig)
 
 
