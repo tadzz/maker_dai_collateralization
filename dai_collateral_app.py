@@ -3,7 +3,6 @@ import pandas as pd
 import streamlit as st
 import json
 import requests
-import altair as alt
 import plotly.express as px
 
 
@@ -13,15 +12,10 @@ def get_vaults_list():
     bearer_token = 'Cf9pZZzc?JAYQ>A'
     payload = {}
     headers = {'Authorization': 'Bearer '+ bearer_token}
-    #response = requests.request("GET", url, headers=headers, data = payload)
-    #raw_data = json.dumps(response.json()["message"]['vaults'])
-    #json_data = json.loads(raw_data)
-    #df = pd.DataFrame.from_dict(json_data)
-
-    response = pd.read_json('response_2.json')
-    message = response['message'][0]
-    df = pd.DataFrame(data=message)
-
+    response = requests.request("GET", url, headers=headers, data = payload)
+    raw_data = json.dumps(response.json()["message"]['vaults'])
+    json_data = json.loads(raw_data)
+    df = pd.DataFrame.from_dict(json_data)
     df['liquidation_ratio'] = df['osm_price'] / df['principal'] * 100
     df['principal_x_collateralization'] = df['principal'] * df['collateralization']
     
@@ -72,11 +66,11 @@ column_show = ['AAVE',
 
 # create df and display it
 df = get_vaults_list()
-#st.dataframe(df.style.highlight_max(axis=0))
+st.dataframe(df.style.highlight_max(axis=0))
 
 # create mapping and display it
 df_ilk_curr = create_mapping()
-#st.dataframe(df_ilk_curr.style.highlight_max(axis=0))
+st.dataframe(df_ilk_curr.style.highlight_max(axis=0))
 
 
 # create sunburst chart
@@ -94,20 +88,3 @@ fig = px.sunburst(df_ilk_curr,
                   #color_continuous_midpoint=np.average(df_ilk_curr['liquidation_ratio'], weights=df_ilk_curr['principal'])
                  )
 st.plotly_chart(fig)
-
-
-# chart 1
-#d = alt.Chart(df).mark_bar().encode(x='ilk', y='principal')
-#st.altair_chart(d, use_container_width=True)
-
-
-# chart 2
-#df_2 = pd.DataFrame(np.random.randn(200, 3),columns=['a', 'b', 'c'])
-#c = alt.Chart(df_2).mark_circle().encode(
-#    x='a', y='b', size='c', color='c', tooltip=['a', 'b', 'c'])
-#st.altair_chart(c, use_container_width=True)
-
-# chart 3
-#st.bar_chart(df)
-
-# https://plotly.com/python/pie-charts/
