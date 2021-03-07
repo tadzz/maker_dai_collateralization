@@ -6,7 +6,6 @@ import requests
 import plotly.express as px
 
 
-@st.cache
 def get_vaults_list():
     url = "https://beta.mcdstate.info/api/vaults_list"
     bearer_token = 'Cf9pZZzc?JAYQ>A'
@@ -24,7 +23,6 @@ def get_vaults_list():
     how="left", on=None, left_on='ilk', right_on='ilk', copy=False)
     return df_merged
 
-@st.cache
 def create_mapping():
     df_ilk_curr = df.groupby(['ilk', 'currency L1'], 
                          as_index=False).agg({'principal':sum,
